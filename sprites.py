@@ -113,12 +113,10 @@ class Score(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         #Define initial text
-        self.text = self.game.font.render(f"Score: {self.game.score}", False, BLACK)
-        self.image = self.text.convert_alpha()
+        self.image = self.game.font.render(f"Score: {self.game.score}", True, BLACK)
 
         #Define rect
-        self.rect = self.text.get_rect()
+        self.rect = self.image.get_rect()
 
     def update(self):
-        self.text = self.game.font.render(f"Score: {self.game.score}", False, BLACK)
-        self.image = self.text.convert_alpha()
+        self.image = self.game.font.render(f"Score: {self.game.score}", True, BLACK)
