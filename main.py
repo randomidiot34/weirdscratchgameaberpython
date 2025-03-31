@@ -15,10 +15,12 @@ class Game:
 
         #Set groups
         self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.ground = pygame.sprite.LayeredUpdates()
         self.balls = pygame.sprite.LayeredUpdates()
 
         #Create Entities
         player = Player(self)
+        ground = Ground(self)
 
     def events(self):
         #Handle events

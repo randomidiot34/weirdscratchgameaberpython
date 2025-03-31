@@ -44,3 +44,20 @@ class Player(pygame.sprite.Sprite):
             self.grounded = False
             self.velocity_y = PLAYER_JUMPFORCE
             self.rect.y -= 10
+
+class Ground(pygame.sprite.Sprite):
+    def __init__(self, game):
+        self.game = game
+
+        #Define layer
+        self._layer = GROUND_LAYER
+        self.groups = self.game.all_sprites, self.game.ground
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        #Define image
+        self.image = pygame.Surface([GROUND_WIDTH, GROUND_HEIGHT])
+        self.image.fill(GREEN)
+
+        #Define rect and position
+        self.rect = self.image.get_rect()
+        self.rect.y = GROUND_LEVEL
