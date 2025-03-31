@@ -11,16 +11,23 @@ class Game:
         pygame.display.set_caption(WIN_CAPTION)
         self.clock = pygame.time.Clock()
 
+        #Text
+        self.font = pygame.font.Font(FONT, FONT_SIZE)
+        self.score = 0
+
         self.running = True
 
         #Set groups
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.ground = pygame.sprite.LayeredUpdates()
         self.balls = pygame.sprite.LayeredUpdates()
+        self.text = pygame.sprite.LayeredUpdates()
 
         #Create Entities
         player = Player(self)
         ground = Ground(self)
+        baseball = Baseball(self)
+        score = Score(self)
 
     def events(self):
         #Handle events

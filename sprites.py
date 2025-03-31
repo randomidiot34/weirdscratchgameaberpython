@@ -6,8 +6,10 @@ class Player(pygame.sprite.Sprite):
 
         self.game = game
 
-        #Define Layer
+        #Define render Layer
         self._layer = PLAYER_LAYER
+
+        #Define group
         self.groups = self.game.all_sprites
         pygame.sprite.Sprite.__init__(self, self.groups)
 
@@ -38,6 +40,8 @@ class Player(pygame.sprite.Sprite):
             self.velocity_y = 0
             self.grounded = True
 
+        self.collide_balls()
+
     def jump(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.grounded:
@@ -45,12 +49,19 @@ class Player(pygame.sprite.Sprite):
             self.velocity_y = PLAYER_JUMPFORCE
             self.rect.y -= 10
 
+    def collide_balls(self):
+        hits = pygame.sprite.spritecollide(self, self.game.balls, False, pygame.sprite.collide_circle)
+        if hits:
+            self.game.running = False
+
 class Ground(pygame.sprite.Sprite):
     def __init__(self, game):
         self.game = game
 
-        #Define layer
+        #Define render layer
         self._layer = GROUND_LAYER
+
+        #Define groups
         self.groups = self.game.all_sprites, self.game.ground
         pygame.sprite.Sprite.__init__(self, self.groups)
 
@@ -61,3 +72,53 @@ class Ground(pygame.sprite.Sprite):
         #Define rect and position
         self.rect = self.image.get_rect()
         self.rect.y = GROUND_LEVEL
+
+class Baseball(pygame.sprite.Sprite):
+    def __init__(self, game):
+        self.game = game
+
+        #Define render layer
+        self._layer = BASEBALL_LAYER
+        
+        #Define groups
+        self.groups = self.game.all_sprites, self.game.balls
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        #Define image
+        self.image = pygame.Surface([BASEBALL_DIAMETER, BASEBALL_DIAMETER], pygame.SRCALPHA)
+        self.image.fill((0, 0, 0, 0))
+
+        #Define rect and circle
+        self.rect = self.image.get_rect()
+        pygame.draw.circle(self.image, BLUE, (BASEBALL_DIAMETER/2, BASEBALL_DIAMETER/2), BASEBALL_DIAMETER/2)
+        self.rect.y = BASEBALL_Y
+        self.rect.x = BASEBALL_X
+
+    def update(self):
+        self.rect.x -= BASEBALL_SPEED
+
+        if self.rect.right < 0:
+            self.rect.x = WIN_WIDTH
+            self.game.score += 1
+
+class Score(pygame.sprite.Sprite):
+    def __init__(self, game):
+        self.game = game
+
+        #Define render layer
+        self._layer = TEXT_LAYER
+
+        #Define groups
+        self.groups = self.game.all_sprites, self.game.text
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        #Define initial text
+        self.text = self.game.font.render(f"Score: {self.game.score}", False, BLACK)
+        self.image = self.text.convert_alpha()
+
+        #Define rect
+        self.rect = self.text.get_rect()
+
+    def update(self):
+        self.text = self.game.font.render(f"Score: {self.game.score}", False, BLACK)
+        self.image = self.text.convert_alpha()
