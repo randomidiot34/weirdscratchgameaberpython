@@ -11,9 +11,8 @@ class Player(pygame.sprite.Sprite):
         self.groups = self.game.all_sprites
         pygame.sprite.Sprite.__init__(self, self.groups)
 
-        #Define x and y position
-        self.x = PLAYER_X
-        self.y = PLAYER_Y
+        #Define y velocity
+        self.velocity_y = 0
 
         #Define image
         self.image = pygame.Surface([PLAYER_WIDTH, PLAYER_HEIGHT])
@@ -21,8 +20,27 @@ class Player(pygame.sprite.Sprite):
 
         #Define rect and set position
         self.rect = self.image.get_rect()
-        self.rect.x = self.x
-        self.rect.y = self.y
+        self.rect.x = PLAYER_X
+        self.rect.bottom = GROUND_LEVEL
 
     def update(self):
-        pass
+
+        self.jump()
+        #Grounded check
+        if self.rect.bottom < GROUND_LEVEL:
+           #Update y velocity
+           self.velocity_y -= GRAVITY
+           #Update position if not grounded
+           self.rect.y -= self.velocity_y
+        else:
+            #Set player height to ground level
+            self.rect.bottom = GROUND_LEVEL
+            self.velocity_y = 0
+            self.grounded = True
+
+    def jump(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE] and self.grounded:
+            self.grounded = False
+            self.velocity_y = PLAYER_JUMPFORCE
+            self.rect.y -= 10
