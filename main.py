@@ -15,8 +15,6 @@ class Game:
         self.font = pygame.font.Font(FONT, FONT_SIZE)
         self.score = 0
 
-        self.running = True
-
         #Set groups
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.ground = pygame.sprite.LayeredUpdates()
@@ -26,8 +24,12 @@ class Game:
         #Create Entities
         player = Player(self)
         ground = Ground(self)
+        basketball = Basketball(self)
         baseball = Baseball(self)
         score = Score(self)
+
+        #Start game
+        self.running = True
 
     def events(self):
         #Handle events

@@ -94,8 +94,42 @@ class Baseball(pygame.sprite.Sprite):
         self.rect.y = BASEBALL_Y
         self.rect.x = BASEBALL_X
 
+        #Define move directions
+        self.dx, self.dy =(BASEBALL_TARGET_X - BASEBALL_X, BASEBALL_TARGET_Y - BASEBALL_Y)
+        self.stepx, self.stepy = (self.dx / BASEBALL_SPEED, self.dy / BASEBALL_SPEED)
+
     def update(self):
-        self.rect.x -= BASEBALL_SPEED
+        self.rect.x += self.stepx
+        self.rect.y += self.stepy
+
+        if self.rect.x < BASEBALL_TARGET_X:
+            self.rect.x = BASEBALL_X
+            self.rect.y = BASEBALL_Y
+            self.game.score += 1
+
+class Basketball(pygame.sprite.Sprite):
+    def __init__(self, game):
+        self.game = game
+
+        #Define render layer
+        self._layer = BASKETBALL_LAYER
+
+        #Define groups
+        self.groups = self.game.all_sprites, self.game.balls
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        #Define image
+        self.image = pygame.Surface([BASKETBALL_DIAMETER, BASKETBALL_DIAMETER], pygame.SRCALPHA)
+        self.image.fill((0, 0, 0, 0))
+
+        #Define rect and circle
+        self.rect = self.image.get_rect()
+        pygame.draw.circle(self.image, RED, (BASKETBALL_DIAMETER/2, BASKETBALL_DIAMETER/2), BASKETBALL_DIAMETER/2)
+        self.rect.y = BASKETBALL_Y
+        self.rect.x = BASKETBALL_X
+
+    def update(self):
+        self.rect.x -= BASKETBALL_SPEED
 
         if self.rect.right < 0:
             self.rect.x = WIN_WIDTH
